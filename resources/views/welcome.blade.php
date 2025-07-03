@@ -29,7 +29,7 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
-        header, footer {
+        footer {
             height: var(--navbar-height);
             background-color: #fff;
             display: flex;
@@ -40,9 +40,49 @@
             z-index: 10;
         }
 
-        header img.logo {
-        }
-            height: 40px;
+        /* header img.logo {
+         height: 40px;
+        } */
+           
+header {
+    background-color: white;
+    border-bottom: 1px solid #eee;
+    padding: 10px 20px;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    height: 40px;
+}
+
+nav ul {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    nav ul {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+}
+
+
 
         nav ul {
             list-style: none;
@@ -192,29 +232,37 @@
 
     <!-- Navbar -->
    <header>
-    <img src="/images/logo.png" alt="Gincaneiros" class="logo">
+    <div class="navbar-container">
+        <img src="/images/logo.png" alt="Gincaneiros" class="logo">
+        
+        <nav>
+            <ul id="desktopMenu">
+                <li><a href="#" onclick="showAbout()">Sobre</a></li>
+                <li><a href="#" onclick="showHowToPlay()">Como Jogar</a></li>
+                <li><a href="#" id="loginBtn">Login com Google</a></li>
+            </ul>
+        </nav>
 
-    <nav>
-        <ul id="desktopMenu">
-            <li><a href="#" onclick="showAbout()">Sobre</a></li>
-            <li><a href="#" onclick="showHowToPlay()">Como Jogar</a></li>
-            <li><a href="#" id="loginBtn">Login</a></li>
-        </ul>
-    </nav>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
 
-    <!-- Botão hambúrguer -->
-    <div class="hamburger" onclick="toggleMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
+    <div class="menu-mobile" id="mobileMenu">
+        <a href="#" onclick="showAbout()">Sobre</a>
+        <a href="#" onclick="showHowToPlay()">Como Jogar</a>
+        <a href="#" id="mobileLoginBtn">Login com Google</a>
     </div>
 </header>
+
 
 <!-- Menu Mobile (fora do header/nav direto) -->
 <div class="menu-mobile" id="mobileMenu">
     <a href="#" onclick="showAbout()">Sobre</a>
     <a href="#" onclick="showHowToPlay()">Como Jogar</a>
-    <a href="#" id="loginBtn">Login</a>
+    <button id="loginBtn">Login com Google</button>
+
+    <!-- <a href="#" id="loginBtn">Login</a> -->
 </div>
 
 
@@ -449,38 +497,41 @@ function deg2rad(deg) {
 
 </script>
 
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+<!-- Firebase Scripts -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyANaG9MwOgpuELNX2bQhfFSv52DsT3qPVA",
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyANaG9MwOgpuELNX2bQhfFSv52DsT3qPVA",
     authDomain: "gincaneiros-02jul.firebaseapp.com",
     projectId: "gincaneiros-02jul",
     storageBucket: "gincaneiros-02jul.firebasestorage.app",
     messagingSenderId: "971542663015",
     appId: "1:971542663015:web:7a07b62bc02123a67ea9c2"
-  };
+    };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
 
-document.getElementById('loginBtn').addEventListener('click', () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  firebase.auth().signInWithPopup(provider)
-    .then((result) => {
-      const user = result.user;
-      localStorage.setItem('g_user', JSON.stringify(user));
-      window.location.href = "/dashboard"; // redireciona para nova gincana
-    })
-    .catch((error) => {
-      console.error(error);
-      Swal.fire('Erro ao logar', error.message, 'error');
-    });
-});
+    function googleLogin() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                const user = result.user;
+                localStorage.setItem('g_user', JSON.stringify(user));
+                window.location.href = "/dashboard";
+            })
+            .catch((error) => {
+                console.error(error);
+                Swal.fire('Erro ao logar', error.message, 'error');
+            });
+    }
+
+    // Ativando para desktop e mobile
+    document.getElementById("loginBtn").addEventListener("click", googleLogin);
+    document.getElementById("mobileLoginBtn").addEventListener("click", googleLogin);
+</script>
+
 
 
 </script>
