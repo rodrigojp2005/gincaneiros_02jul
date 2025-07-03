@@ -134,7 +134,9 @@
 
         <nav>
             <ul>
-                <li><a href="#">Criar Gincana</a></li>
+                <!-- <li><a href="#" >Criar Gincana</a></li> -->
+                 <li><a href="{{ route('gincana.criar') }}">Criar Gincana</a></li>
+
                 <li><a href="#">Procurar Gincana</a></li>
                 <li><a href="#">Gincanas Jogadas</a></li>
                 <li><a href="#" onclick="showHowToPlay()">Como Jogar</a></li>
@@ -149,7 +151,9 @@
         </div>
 
         <div class="menu-mobile" id="mobileMenu">
-            <a href="#">Criar Gincana</a>
+            <!-- <a href="#">Criar Gincana</a> -->
+             <li><a href="{{ route('gincana.criar') }}">Criar Gincana</a></li>
+
             <a href="#">Procurar Gincana</a>
             <a href="#">Gincanas Jogadas</a>
             <a href="#" onclick="showHowToPlay()">Como Jogar</a>
