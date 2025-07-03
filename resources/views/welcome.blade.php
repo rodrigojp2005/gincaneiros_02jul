@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Firebase App (core) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
     <style>
         :root {
@@ -38,8 +41,8 @@
         }
 
         header img.logo {
-            height: 40px;
         }
+            height: 40px;
 
         nav ul {
             list-style: none;
@@ -195,7 +198,7 @@
         <ul id="desktopMenu">
             <li><a href="#" onclick="showAbout()">Sobre</a></li>
             <li><a href="#" onclick="showHowToPlay()">Como Jogar</a></li>
-            <li><a href="#">Login</a></li>
+            <li><a href="#" id="loginBtn">Login</a></li>
         </ul>
     </nav>
 
@@ -211,7 +214,7 @@
 <div class="menu-mobile" id="mobileMenu">
     <a href="#" onclick="showAbout()">Sobre</a>
     <a href="#" onclick="showHowToPlay()">Como Jogar</a>
-    <a href="#">Login</a>
+    <a href="#" id="loginBtn">Login</a>
 </div>
 
 
@@ -443,6 +446,42 @@ function getDirectionHint(from, to) {
 function deg2rad(deg) {
     return deg * (Math.PI / 180);
 }
+
+</script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyANaG9MwOgpuELNX2bQhfFSv52DsT3qPVA",
+    authDomain: "gincaneiros-02jul.firebaseapp.com",
+    projectId: "gincaneiros-02jul",
+    storageBucket: "gincaneiros-02jul.firebasestorage.app",
+    messagingSenderId: "971542663015",
+    appId: "1:971542663015:web:7a07b62bc02123a67ea9c2"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+document.getElementById('loginBtn').addEventListener('click', () => {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  firebase.auth().signInWithPopup(provider)
+    .then((result) => {
+      const user = result.user;
+      localStorage.setItem('g_user', JSON.stringify(user));
+      window.location.href = "/dashboard"; // redireciona para nova gincana
+    })
+    .catch((error) => {
+      console.error(error);
+      Swal.fire('Erro ao logar', error.message, 'error');
+    });
+});
+
 
 </script>
 
