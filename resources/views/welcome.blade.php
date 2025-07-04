@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <!-- Conteúdo Central (Street View) -->
-    
+   
         <!-- Botão "Ver Mapa" -->
         <button id="openMapBtn">Ver Mapa</button>
         <!-- Sidebar (Mapa para palpite) -->
@@ -15,11 +15,6 @@
         <div id="street-view"></div>
     
 @endsection
-
-
-<!-- Firebase Scripts - Carregados apenas uma vez -->
-<!-- <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script> -->
 
 <script>
     // Função global para o Google Maps
@@ -38,21 +33,6 @@
 
     // Aguarda o DOM estar pronto para o restante do código
     document.addEventListener('DOMContentLoaded', function() {
-        // Configuração do Firebase
-        // const firebaseConfig = {
-        //     apiKey: "AIzaSyANaG9MwOgpuELNX2bQhfFSv52DsT3qPVA",
-        //     authDomain: "gincaneiros-02jul.firebaseapp.com",
-        //     projectId: "gincaneiros-02jul",
-        //     storageBucket: "gincaneiros-02jul.firebasestorage.app",
-        //     messagingSenderId: "971542663015",
-        //     appId: "1:971542663015:web:7a07b62bc02123a67ea9c2"
-        // };
-
-        // // Inicializa Firebase apenas se não foi inicializado
-        // if (!firebase.apps.length) {
-        //     firebase.initializeApp(firebaseConfig);
-        // }
-
         // Variáveis globais
         let selectedLatLng = null;
         let map;
@@ -264,16 +244,6 @@
             });
         }
 
-        // const loginBtn = document.getElementById("loginBtn");
-        // if (loginBtn) {
-        //     loginBtn.addEventListener("click", googleLogin);
-        // }
-
-        // const mobileLoginBtn = document.getElementById("mobileLoginBtn");
-        // if (mobileLoginBtn) {
-        //     mobileLoginBtn.addEventListener("click", googleLogin);
-        // }
-
         // Tornar funções globais para uso em outros lugares
         window.toggleMenu = toggleMenu;
         window.showHowToPlay = showHowToPlay;
@@ -288,6 +258,3 @@
         }
     });
 </script>
-
-<!-- Google Maps API - Carregado por último -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzEzusC_k3oEoPnqynq2N4a0aA3arzH-c" async defer></script>

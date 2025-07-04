@@ -53,3 +53,14 @@
         if (loginBtn) {
             loginBtn.addEventListener('click', googleLogin);
         }
+
+        // ...depois de verificar o usuário logado no Firebase...
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+        const greeting = document.getElementById('userGreeting');
+        if (greeting) {
+            greeting.textContent = `Olá, ${user.displayName}`;
+            greeting.style.display = 'block';
+        }
+    }
+});

@@ -4,7 +4,7 @@
             <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
             <span style="font-size: 1.5rem; font-weight: bold; color: #222;">Gincaneiros</span>
         </a>
-
+            <span id="userGreeting" style="display:none; pointer-events:none; color:#222; font-weight:bold;"></span>
          <button class="navbar-toggle" id="navbarToggle" aria-label="Abrir menu">
             <span></span>
             <span></span>
