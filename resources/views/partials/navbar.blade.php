@@ -11,15 +11,12 @@
             <span></span>
         </button>
         <ul class="navbar-menu" id="navbarMenu">
-            <li><a href="#" onclick="showAbout()">Sobre</a></li>
-            <li><a href="#" onclick="showHowToPlay()">Como Jogar</a></li>
-            @if(auth()->check())
-                <li><a href="{{ url('/gincana/criar') }}">Criar Gincana</a></li>
-                <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
-                <li><a href="#" onclick="logout()">Logout</a></li>
-            @else
-                <li><a href="#" id="loginBtn">Login com Google</a></li>
-            @endif
+            <li><a href="#" id="sobreBtn">Sobre</a></li>
+            <li><a href="#" id="comoJogarBtn">Como Jogar</a></li>
+            <li id="criarGincanaItem" style="display:none;"><a href="/gincana/criar">Criar Gincana</a></li>
+            <li id="dashboardItem" style="display:none;"><a href="/dashboard">Dashboard</a></li>
+            <li id="logoutItem" style="display:none;"><a href="#" onclick="logout()">Logout</a></li>
+            <li id="loginItem"><a href="#" id="loginBtn">Login com Google</a></li>
         </ul>
     </nav>
 </header>

@@ -57,10 +57,65 @@
         // ...depois de verificar o usuário logado no Firebase...
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-        const greeting = document.getElementById('userGreeting');
-        if (greeting) {
-            greeting.textContent = `Olá, ${user.displayName}`;
-            greeting.style.display = 'block';
-        }
+        document.getElementById('criarGincanaItem').style.display = '';
+        document.getElementById('dashboardItem').style.display = '';
+        document.getElementById('logoutItem').style.display = '';
+        document.getElementById('loginItem').style.display = 'none';
+        // Exibir saudação
+        document.getElementById('userGreeting').textContent = `Olá, ${user.displayName}`;
+        document.getElementById('userGreeting').style.display = 'inline';
+    } else {
+        document.getElementById('criarGincanaItem').style.display = 'none';
+        document.getElementById('dashboardItem').style.display = 'none';
+        document.getElementById('logoutItem').style.display = 'none';
+        document.getElementById('loginItem').style.display = '';
+        document.getElementById('userGreeting').style.display = 'none';
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const sobreBtn = document.getElementById('sobreBtn');
+    if (sobreBtn) {
+        sobreBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showAbout();
+        });
+    }
+
+    const comoJogarBtn = document.getElementById('comoJogarBtn');
+    if (comoJogarBtn) {
+        comoJogarBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showHowToPlay();
+        });
+    }
+});
+
+function showAbout() {
+    Swal.fire({
+        title: 'Sobre o Gincaneiros',
+        html: `
+            <p style="margin-top:15px;">📬 Dúvidas ou sugestões? <br><a href="mailto:contato@gincaneiros.com">contato@gincaneiros.com</a></p>
+        `,
+        icon: 'info',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#0d6efd'
+    });
+}
+
+function showHowToPlay() {
+    Swal.fire({
+        title: 'Como Jogar',
+        html: `
+            <p><strong>Gincaneiros</strong> é um jogo de localização divertido e direto.</p>
+            <ul style="text-align: left;">
+                <li>Explore o mapa e tente encontrar o local correto.</li>
+                <li>Você tem um número limitado de tentativas.</li>
+            </ul>
+            <p>Você consegue encontrar o "fulano de tal"?</p>
+        `,
+        icon: 'info',
+        confirmButtonText: 'Entendi!',
+        confirmButtonColor: '#0d6efd'
+    });
+}
