@@ -128,38 +128,8 @@
     </style>
 </head>
 <body>
+@include('partials.navbar')
 
-    <header>
-        <img src="/images/logo.png" alt="Gincaneiros" class="logo">
-
-        <nav>
-            <ul>
-                <!-- <li><a href="#" >Criar Gincana</a></li> -->
-                 <li><a href="{{ route('gincana.criar') }}">Criar Gincana</a></li>
-
-                <li><a href="#">Procurar Gincana</a></li>
-                <li><a href="#">Gincanas Jogadas</a></li>
-                <li><a href="#" onclick="showHowToPlay()">Como Jogar</a></li>
-                <li><a href="#" onclick="logout()">Logout</a></li>
-            </ul>
-        </nav>
-
-        <div class="hamburger" onclick="toggleMobileMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-
-        <div class="menu-mobile" id="mobileMenu">
-            <!-- <a href="#">Criar Gincana</a> -->
-             <li><a href="{{ route('gincana.criar') }}">Criar Gincana</a></li>
-
-            <a href="#">Procurar Gincana</a>
-            <a href="#">Gincanas Jogadas</a>
-            <a href="#" onclick="showHowToPlay()">Como Jogar</a>
-            <a href="#" onclick="logout()">Logout</a>
-        </div>
-    </header>
 
     <main>
         <h2>Bem-vindo à sua Gincana!</h2>

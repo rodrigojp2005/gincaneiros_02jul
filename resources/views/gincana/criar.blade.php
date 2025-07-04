@@ -39,7 +39,8 @@
 </head>
 <body>
 
-<header>Criar Nova Gincana</header>
+@include('partials.navbar')
+
 
 <div class="container">
     <p>Escolha um local no Street View para a gincana</p>
