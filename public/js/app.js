@@ -95,7 +95,10 @@ function showAbout() {
     Swal.fire({
         title: 'Sobre o Gincaneiros',
         html: `
-            <p style="margin-top:15px;">📬 Dúvidas ou sugestões? <br><a href="mailto:contato@gincaneiros.com">contato@gincaneiros.com</a></p>
+       <p><strong>Gincaneiros</strong> é um jogo interativo e turístico de localização.</p>
+                     <p>O objetivo é simples: um jogador escolhe um local no Street View e desafia os amigos (ou o mundo!) a descobrirem onde ele está.</p>
+                     <p>💡 É como uma gincana moderna, baseada em mapas e intuição geográfica!</p>
+                     <p style="margin-top:15px;">📬 Dúvidas ou sugestões? <br><a href="mailto:contato@gincaneiros.com">contato@gincaneiros.com</a></p>               
         `,
         icon: 'info',
         confirmButtonText: 'OK',
@@ -107,12 +110,13 @@ function showHowToPlay() {
     Swal.fire({
         title: 'Como Jogar',
         html: `
-            <p><strong>Gincaneiros</strong> é um jogo de localização divertido e direto.</p>
-            <ul style="text-align: left;">
-                <li>Explore o mapa e tente encontrar o local correto.</li>
-                <li>Você tem um número limitado de tentativas.</li>
-            </ul>
-            <p>Você consegue encontrar o "fulano de tal"?</p>
+             <p><strong>Gincaneiros</strong> é um jogo de localização divertido e direto.</p>
+                     <ul style="text-align: center;">
+                         <li>👤 Um jogador escolhe um local real no Street View.</li>
+                         <li>📍 Um desafio é gerado para os amigos encontrarem o local.</li>
+                         <li>🗺️ Quem chegar mais perto, ganha mais pontos.</li>
+                        <li>🏆 O jogador com mais pontos no final vence.</li>
+                    </ul>
         `,
         icon: 'info',
         confirmButtonText: 'Entendi!',
