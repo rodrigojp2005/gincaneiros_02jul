@@ -23,11 +23,33 @@
             document.getElementById("street-view"),
             {
                 position: { lat: -23.55052, lng: -46.633308 },
-                pov: { heading: 165, pitch: 0 },
+                pov: { heading: 300, pitch: 0 }, // Experimente 0, 90, 180, 270
                 zoom: 1,
                 disableDefaultUI: true
             }
         );
+
+        // Adiciona a figurinha como marcador no panorama
+        const marker = new google.maps.Marker({
+            position: { lat: -23.55052, lng: -46.633308 },
+            map: panorama,
+            icon: {
+                url: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTRweGJoMHk1eG5nb2tyOHMyMHp1ZGlpYTFoZDZ6Ym9zZ3ZkYXB6MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/bvQHYGOF8UOXqXSFir/giphy.gif",
+                scaledSize: new google.maps.Size(60, 80) // ajuste o tamanho conforme necessário
+            },
+            // O marker aparece só no panorama, não no mapa tradicional
+            visible: true
+        });
+
+        marker.addListener('click', function() {
+            Swal.fire({
+                title: 'Onde estou ...',
+                text: 'Procure no mapa e ajude a me encontrarem neste local desconhecido, buá, buá!',
+                icon: 'question',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+            });
+        });
     }
     window.initMap = initMap;
 
