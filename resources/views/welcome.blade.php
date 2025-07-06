@@ -3,7 +3,7 @@
     <!-- Conteúdo Central (Street View) -->
    
         <!-- Botão "Ver Mapa" -->
-        <button id="openMapBtn">Ver Mapa</button>
+        <button id="openMapBtn" class="map-action-btn">Abrir Mapa</button>
         <!-- Sidebar (Mapa para palpite) -->
         <div id="mapSidebar">
             <div class="sidebar-header">

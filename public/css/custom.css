@@ -306,3 +306,29 @@ footer {
 .navbar-menu.active::before {
     display: none !important;
 }
+
+/* Map Action Button */
+.map-action-btn {
+    position: fixed;
+    left: 50%;
+    bottom: 16px !important;
+    transform: translateX(-50%);
+    background: #27ae60 !important;
+    color: #fff !important;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 18px 60px;
+    border: none;
+    border-radius: 32px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    cursor: pointer;
+    z-index: 1000;
+    width: 320px;
+    max-width: 90vw;
+    letter-spacing: 1px;
+    transition: background 0.2s;
+}
+
+.map-action-btn:hover {
+    background: #219150 !important;
+}
