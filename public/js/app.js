@@ -1,4 +1,4 @@
-       const firebaseConfig = {
+const firebaseConfig = {
             apiKey: "AIzaSyANaG9MwOgpuELNX2bQhfFSv52DsT3qPVA",
             authDomain: "gincaneiros-02jul.firebaseapp.com",
             projectId: "gincaneiros-02jul",
@@ -61,8 +61,9 @@ firebase.auth().onAuthStateChanged(function(user) {
         document.getElementById('dashboardItem').style.display = '';
         document.getElementById('logoutItem').style.display = '';
         document.getElementById('loginItem').style.display = 'none';
-        // Exibir saudação
-        document.getElementById('userGreeting').textContent = `Olá, ${user.displayName}`;
+        // Exibir saudação só com o primeiro nome
+        const firstName = user.displayName ? user.displayName.split(' ')[0] : '';
+        document.getElementById('userGreeting').textContent = `Olá, ${firstName}`;
         document.getElementById('userGreeting').style.display = 'inline';
     } else {
         document.getElementById('criarGincanaItem').style.display = 'none';
