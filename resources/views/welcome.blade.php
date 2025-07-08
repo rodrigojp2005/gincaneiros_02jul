@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <!-- Conteúdo Central (Street View) -->
-   
+    <!-- Conteúdo Central (Street View) --> 
         <!-- Botão "Ver Mapa" -->
         <button id="openMapBtn" class="map-action-btn">Abrir Mapa</button>
         <!-- Sidebar (Mapa para palpite) -->
@@ -12,8 +11,7 @@
             <div id="map"></div>
             <button id="confirmBtn">Confirmar Local</button>
         </div>
-        <div id="street-view"></div>
-    
+        <div id="street-view"></div>  
 @endsection
 
 <script>
@@ -35,7 +33,8 @@
             map: panorama,
             icon: {
                 url: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTRweGJoMHk1eG5nb2tyOHMyMHp1ZGlpYTFoZDZ6Ym9zZ3ZkYXB6MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/bvQHYGOF8UOXqXSFir/giphy.gif",
-                scaledSize: new google.maps.Size(60, 80) // ajuste o tamanho conforme necessário
+                scaledSize: new google.maps.Size(60, 80), // ajuste o tamanho conforme necessário
+                anchor: new google.maps.Point(30, 80) // x = metade da largura, y = altura total (base do GIF na posição)
             },
             // O marker aparece só no panorama, não no mapa tradicional
             visible: true
