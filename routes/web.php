@@ -6,6 +6,8 @@ use App\Http\Controllers\GincanaController;
 
 Route::get('/', [GameController::class, 'index']);
 Route::get('/gincana/criar', [GincanaController::class, 'criar'])->name('gincana.criar');
+Route::post('/gincana', [App\Http\Controllers\GincanaController::class, 'store'])->name('gincana.store');
+Route::get('/gincana', [App\Http\Controllers\GincanaController::class, 'index'])->name('gincana.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

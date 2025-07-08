@@ -9,7 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script> 
     <!-- Google Maps API - Carregado por último -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzEzusC_k3oEoPnqynq2N4a0aA3arzH-c" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzEzusC_k3oEoPnqynq2N4a0aA3arzH-c&callback=initMap" async defer></script>
     
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">

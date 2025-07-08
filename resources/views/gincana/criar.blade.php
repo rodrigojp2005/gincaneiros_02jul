@@ -1,93 +1,134 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Criar Gincana</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <style>
-        body { margin: 0; font-family: sans-serif; }
-        header, footer {
-            background-color: #f1f1f1;
-            padding: 10px 20px;
-            text-align: center;
-            font-weight: bold;
-        }
+@extends('layouts.app')
+@section('content')
+<div id="form_container" style="max-width: 600px; margin: 60px auto 0 auto; padding: 20px;">
+    <h2 style="margin-bottom: 18px;">Criar Nova Gincana</h2>
+    <form id="form-criar-gincana" method="POST" action="{{ route('gincana.store') }}">
+        @csrf
 
-        .container {
-            padding: 1rem;
-            text-align: center;
-        }
+        <!-- Nome da Gincana -->
+        <div style="margin-bottom: 16px;">
+            <label for="nome" style="display: block; font-weight: bold; margin-bottom: 6px;">Nome da Gincana</label>
+            <input type="text" id="nome" name="nome" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
 
-        #street-view {
-            width: 100%;
-            height: 70vh;
-            background-color: #eee;
-        }
+        <!-- Duração -->
+        <div style="margin-bottom: 16px;">
+            <label for="duracao" style="display: block; font-weight: bold; margin-bottom: 6px;">Duração</label>
+            <select id="duracao" name="duracao" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <option value="24">24 horas</option>
+                <option value="48">48 horas</option>
+                <option value="72">72 horas</option>
+            </select>
+        </div>
 
-        button {
-            margin-top: 1rem;
-            padding: 10px 20px;
-            font-size: 1rem;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-    </style>
-</head>
-<body>
+        <!-- Mapa do Google Maps -->
+        <div style="margin-bottom: 16px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 6px;">Escolha o local do personagem perdido</label>
+            <div id="map" style="height: 300px; width: 100%; border: 1px solid #ccc; border-radius: 4px;"></div>
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+        </div>
 
-@include('partials.navbar')
+        <!-- Campo de Cidade -->
+        <div style="margin-bottom: 16px;">
+            <label for="cidade" style="display: block; font-weight: bold; margin-bottom: 6px;">Cidade / Localização</label>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="cidade" placeholder="Digite a cidade ou endereço" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <button type="button" onclick="buscarCidade()" style="padding: 8px 12px; background-color: #0d6efd; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Buscar
+                </button>
+            </div>
+        </div>
 
 
-<div class="container">
-    <p>Escolha um local no Street View para a gincana</p>
-    <div id="street-view"></div>
-    <button onclick="salvarGincana()">Salvar Gincana</button>
+        <!-- Texto de Contextualização -->
+        <div style="margin-bottom: 16px;">
+            <label for="contexto" style="display: block; font-weight: bold; margin-bottom: 6px;">Texto de Contextualização (fala do personagem)</label>
+            <textarea id="contexto" name="contexto" rows="3" maxlength="255" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+        </div>
+
+        <!-- Privacidade -->
+        <div style="margin-bottom: 16px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 6px;">Privacidade</label>
+            <div style="margin-bottom: 8px;">
+                <input type="radio" name="privacidade" id="publica" value="publica" checked>
+                <label for="publica">Pública (qualquer um pode jogar)</label>
+            </div>
+            <div>
+                <input type="radio" name="privacidade" id="privada" value="privada">
+                <label for="privada">Privada (apenas quem tem o link pode jogar)</label>
+            </div>
+        </div>
+
+        <!-- Botões -->
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+            <button type="submit" style="padding: 10px 20px; background-color: #198754; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Salvar Gincana
+            </button>
+            <a href="{{ route('gincana.index') }}" style="padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px; display: inline-block;">
+                Cancelar
+            </a>
+        </div>
+    </form>
 </div>
+@endsection
 
-<footer>
-    © 2025 Gincaneiros
-</footer>
 
-<!-- Google Maps JS API + Street View -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzEzusC_k3oEoPnqynq2N4a0aA3arzH-c"></script>
+<!-- Google Maps Script -->
 <script>
-    let panorama;
-    let selectedLatLng;
+    let map, marker, geocoder;
 
-    function initStreetView() {
-        const defaultLatLng = { lat: -23.55052, lng: -46.63331 }; // São Paulo, por exemplo
-        panorama = new google.maps.StreetViewPanorama(
-            document.getElementById("street-view"),
-            {
-                position: defaultLatLng,
-                pov: { heading: 165, pitch: 0 },
-                zoom: 1
-            }
-        );
+    function initMap() {
+        const defaultLocation = { lat: -23.55052, lng: -46.633308 }; // São Paulo como exemplo
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: defaultLocation,
+            zoom: 12
+        });
 
-        panorama.addListener("position_changed", () => {
-            selectedLatLng = panorama.getPosition().toJSON();
-            console.log("Posição selecionada:", selectedLatLng);
+        geocoder = new google.maps.Geocoder();
+       
+        // Cria o marcador no mapa
+        marker = new google.maps.Marker({
+            position: defaultLocation,
+            map: map,
+            draggable: true
+        });
+
+        // Atualiza campos hidden ao mover o marcador
+        function updateLatLngFields(position) {
+            document.getElementById('latitude').value = position.lat();
+            document.getElementById('longitude').value = position.lng();
+        }
+
+        updateLatLngFields(marker.getPosition());
+
+        marker.addListener('dragend', function() {
+            updateLatLngFields(marker.getPosition());
+        });
+
+        map.addListener('click', function(event) {
+            marker.setPosition(event.latLng);
+            updateLatLngFields(event.latLng);
         });
     }
 
-    function salvarGincana() {
-        if (!selectedLatLng) {
-            alert("Escolha um local no Street View antes de salvar.");
-            return;
-        }
+     function buscarCidade() {
+        const endereco = document.getElementById('cidade').value;
+        if (!endereco) return;
 
-        // Aqui você pode enviar via fetch ou AJAX para o Laravel
-        console.log("Enviando gincana com:", selectedLatLng);
-        alert("Simulação de envio da gincana. Integração com Firebase/MySQL virá na próxima etapa.");
+        geocoder.geocode({ address: endereco }, function (results, status) {
+            if (status === 'OK') {
+                const location = results[0].geometry.location;
+                map.setCenter(location);
+                map.setZoom(14);
+                marker.setPosition(location);
+                document.getElementById('latitude').value = location.lat();
+                document.getElementById('longitude').value = location.lng();
+            } else {
+                alert('Local não encontrado: ' + status);
+            }
+        });
     }
 
-    window.onload = initStreetView;
+    window.onload = initMap;
 </script>
-
-</body>
-</html>
