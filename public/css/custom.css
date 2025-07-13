@@ -211,20 +211,67 @@ main {
     width: 100%;
 }
 
-#openMapBtn {
-    position: absolute;
-    bottom: 80px;
+/* Botões de ação do mapa - posicionamento vertical */
+.map-action-btn {
+    position: fixed;
     left: 50%;
     transform: translateX(-50%);
+    background: #27ae60 !important;
+    color: #fff !important;
+    font-size: 1rem;
+    font-weight: bold;
     padding: 12px 24px;
-    font-size: 16px;
-    background-color: #0d6efd;
-    color: white;
     border: none;
     border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
     cursor: pointer;
-    z-index: 100;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+    width: 250px;
+    max-width: 90vw;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+}
+
+
+/* Map Action Button - classe mantida para compatibilidade */
+.map-next-btn {
+    position: fixed;
+    left: 50%;
+    bottom: 16px !important;
+    transform: translateX(-50%);
+    background: #595a59 !important;
+    color: #fff !important;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    cursor: pointer;
+    z-index: 1000;
+    width: 250px;
+    max-width: 90vw;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+}
+
+/* Botão "Abrir Mapa" - posição inferior */
+#openMapBtn {
+    bottom: 80px;
+}
+
+/* Botão "Pular Gincana" - posição acima do "Abrir Mapa" */
+#skipGincanaBtn {
+    bottom: 140px;
+    background: #6c757d !important;
+}
+
+.map-action-btn:hover {
+    background: #219150 !important;
+}
+
+#skipGincanaBtn:hover {
+    background: #5a6268 !important;
 }
 
 /* Footer */
@@ -296,6 +343,13 @@ footer {
     .navbar-menu li a::before {
         display: none !important;
     }
+
+    /* Ajustes para mobile */
+    .map-action-btn {
+        width: 250px;
+        font-size: 1.1rem;
+        padding: 14px 28px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -316,6 +370,13 @@ footer {
         padding: 0.8rem 1.5rem;
         min-width: 180px;
     }
+
+    /* Ajustes para telas muito pequenas */
+    .map-action-btn {
+        width: 220px;
+        font-size: 1rem;
+        padding: 12px 24px;
+    }
 }
 
 /* Mobile Menu Overlay */
@@ -323,28 +384,4 @@ footer {
     display: none !important;
 }
 
-/* Map Action Button */
-.map-action-btn {
-    position: fixed;
-    left: 50%;
-    bottom: 16px !important;
-    transform: translateX(-50%);
-    background: #27ae60 !important;
-    color: #fff !important;
-    font-size: 1.3rem;
-    font-weight: bold;
-    padding: 18px 60px;
-    border: none;
-    border-radius: 32px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-    cursor: pointer;
-    z-index: 1000;
-    width: 320px;
-    max-width: 90vw;
-    letter-spacing: 1px;
-    transition: background 0.2s;
-}
 
-.map-action-btn:hover {
-    background: #219150 !important;
-}

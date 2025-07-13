@@ -9,6 +9,12 @@ Route::get('/gincana/criar', [GincanaController::class, 'criar'])->name('gincana
 Route::post('/gincana', [App\Http\Controllers\GincanaController::class, 'store'])->name('gincana.store');
 Route::get('/gincana', [App\Http\Controllers\GincanaController::class, 'index'])->name('gincana.index');
 
+// Rota para carregar uma nova gincana (tanto inicial quanto para pular)
+Route::get("/gincana/new", [GincanaController::class, "newGincana"]);
+
+// Rota mantida para compatibilidade com a implementação anterior
+Route::get("/gincana/skip", [GincanaController::class, "skipGincana"]);
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
@@ -17,3 +23,4 @@ Route::get('/dashboard', function () {
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
