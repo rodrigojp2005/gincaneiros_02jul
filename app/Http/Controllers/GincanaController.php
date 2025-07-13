@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+//add the Gincana model
+use App\Models\Gincana;
+
 
 class GincanaController extends Controller
 {
@@ -43,25 +46,48 @@ class GincanaController extends Controller
      */
     public function newGincana()
     {
-        // Em um cenário real, você buscaria novas coordenadas de um banco de dados
-        // ou de uma API de gincanas. Para este exemplo, vamos usar coordenadas aleatórias.
-        $randomLocations = [
-            ["lat" => -22.9068, "lng" => -43.1729], // Rio de Janeiro, Brasil
-            ["lat" => 34.0522, "lng" => -118.2437], // Los Angeles, EUA
-            ["lat" => 48.8566, "lng" => 2.3522],   // Paris, França
-            ["lat" => 35.6895, "lng" => 139.6917], // Tóquio, Japão
-            ["lat" => -33.8688, "lng" => 151.2093], // Sydney, Austrália
-            ["lat" => 51.5074, "lng" => -0.1278],   // Londres, Reino Unido
-            ["lat" => 40.7128, "lng" => -74.0060],  // Nova York, EUA
-            ["lat" => -23.5505, "lng" => -46.6333], // São Paulo, Brasil
-            ["lat" => 55.7558, "lng" => 37.6176],   // Moscou, Rússia
-            ["lat" => 39.9042, "lng" => 116.4074]   // Pequim, China
-        ];
 
-        $newLocation = $randomLocations[array_rand($randomLocations)];
+         try {
+            // Busca apenas gincanas públicas do banco de dados
+            $gincana = Gincana::where('privacidade', 'publica')
+                              ->inRandomOrder()
+                              ->first();
 
-        return response()->json($newLocation);
+            if (!$gincana) {
+                // Se não houver gincanas no banco, retorna coordenadas padrão
+                return response()->json([
+                    'lat' => -23.55052,
+                    'lng' => -46.633308,
+                    'nome' => 'Gincana Padrão',
+                    'contexto' => 'Nenhuma gincana encontrada no banco de dados.'
+                ]);
+            }
+
+            // Retorna os dados da gincana encontrada
+            return response()->json([
+                'lat' => (float) $gincana->latitude,
+                'lng' => (float) $gincana->longitude,
+                'nome' => $gincana->nome,
+                'contexto' => $gincana->contexto,
+                'id' => $gincana->id
+            ]);
+
+        } catch (\Exception $e) {
+            // Em caso de erro, retorna coordenadas padrão
+            return response()->json([
+                'lat' => -23.55052,
+                'lng' => -46.633308,
+                'nome' => 'Gincana Padrão',
+                'contexto' => 'Erro ao carregar gincana do banco de dados.',
+                'error' => $e->getMessage()
+            ]);
+        }
     }
+
+    //     $newLocation = $randomLocations[array_rand($randomLocations)];
+
+    //     return response()->json($newLocation);
+    // }
 
     /**
      * Método mantido para compatibilidade com a implementação anterior
@@ -71,5 +97,52 @@ class GincanaController extends Controller
     {
         return $this->newGincana();
     }
+
+    /**
+     * Retorna uma gincana específica por ID
+     */
+    public function getGincana($id)
+    {
+        try {
+            $gincana = Gincana::where('id', $id)
+                              ->where('privacidade', 'publica')
+                              ->first();
+
+            if (!$gincana) {
+                return response()->json(['error' => 'Gincana não encontrada'], 404);
+            }
+
+            return response()->json([
+                'lat' => (float) $gincana->latitude,
+                'lng' => (float) $gincana->longitude,
+                'nome' => $gincana->nome,
+                'contexto' => $gincana->contexto,
+                'id' => $gincana->id
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erro ao buscar gincana'], 500);
+        }
+    }
+
+    /**
+     * Retorna todas as gincanas públicas para listagem
+     */
+    public function getPublicGincanas()
+    {
+        try {
+            $gincanas = Gincana::where('privacidade', 'publica')
+                               ->select('id', 'nome', 'contexto', 'latitude', 'longitude', 'created_at')
+                               ->orderBy('created_at', 'desc')
+                               ->get();
+
+            return response()->json($gincanas);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erro ao buscar gincanas'], 500);
+        }
+    }
 }
+
+
 

@@ -4,6 +4,13 @@
        <!-- Botão "Ver Mapa" -->
         <button id="openMapBtn" class="map-action-btn">Abrir Mapa</button>
         <button id="skipGincanaBtn" class="map-action-btn">Pular Gincana</button>
+        
+        <!-- Informações da Gincana -->
+        <div id="gincanaInfo" style="position: fixed; top: 80px; left: 20px; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000; max-width: 300px; display: none;">
+            <h4 id="gincanaName" style="margin: 0 0 10px 0; color: #333;"></h4>
+            <p id="gincanaContext" style="margin: 0; color: #666; font-size: 14px;"></p>
+        </div>
+        
         <!-- Sidebar (Mapa para palpite) -->
         <div id="mapSidebar">
             <div class="sidebar-header">
@@ -23,6 +30,7 @@
     let marker;
     let panorama;
     let characterMarker;
+    let currentGincana = null;
     
     // Local verdadeiro do personagem (será carregado dinamicamente)
     let trueLocation = {
@@ -46,13 +54,33 @@
         }
     }
 
+    // Função para mostrar informações da gincana
+    function showGincanaInfo(gincana) {
+        const infoDiv = document.getElementById("gincanaInfo");
+        const nameElement = document.getElementById("gincanaName");
+        const contextElement = document.getElementById("gincanaContext");
+        
+        if (infoDiv && nameElement && contextElement) {
+            nameElement.textContent = gincana.nome || 'Gincana';
+            contextElement.textContent = gincana.contexto || 'Descubra onde estou!';
+            infoDiv.style.display = 'block';
+            
+            // Auto-hide após 5 segundos
+            setTimeout(() => {
+                infoDiv.style.display = 'none';
+            }, 5000);
+        }
+    }
+
     // Função para carregar uma nova gincana
     function loadNewGincana() {
         fetch("/gincana/new")
             .then(response => response.json())
             .then(data => {
                 if (data.lat && data.lng) {
+                    currentGincana = data;
                     updateGameLocation(data.lat, data.lng);
+                    showGincanaInfo(data);
                 }
             })
             .catch(error => {
@@ -92,9 +120,13 @@
         });
 
         characterMarker.addListener('click', function() {
+            const message = currentGincana ? 
+                `${currentGincana.contexto || 'Procure no mapa e ajude a me encontrarem neste local desconhecido, buá, buá!'}` :
+                'Procure no mapa e ajude a me encontrarem neste local desconhecido, buá, buá!';
+                
             Swal.fire({
-                title: 'Onde estou ...',
-                text: 'Procure no mapa e ajude a me encontrarem neste local desconhecido, buá, buá!',
+                title: currentGincana ? currentGincana.nome : 'Onde estou ...',
+                text: message,
                 icon: 'question',
                 confirmButtonText: 'OK',
                 confirmButtonColor: '#3085d6',
@@ -249,11 +281,14 @@
                 attempts++;
 
                 if (distance <= 1) {
+                    const gincanaName = currentGincana ? currentGincana.nome : 'Gincana';
                     Swal.fire({
                         icon: 'success',
-                        title: '🎉 Você acertou!',
+                        title: `🎉 Você acertou a ${gincanaName}!`,
                         text: `Distância: ${distance.toFixed(2)} km. Parabéns!`,
-                        confirmButtonText: 'Fechar'
+                        confirmButtonText: 'Nova Gincana'
+                    }).then(() => {
+                        loadNewGincana();
                     });
                 } else if (attempts < maxAttempts) {
                     score -= 200;
@@ -266,17 +301,18 @@
                         confirmButtonText: 'Tentar de novo'
                     });
                 } else {
+                    const gincanaName = currentGincana ? currentGincana.nome : 'Gincana';
                     Swal.fire({
                         icon: 'error',
-                        title: 'Não foi dessa vez!',
+                        title: `Não foi dessa vez na ${gincanaName}!`,
                         html: `<p>Você errou todas as tentativas.</p>
                                <p>O local correto era: ${trueLocation.lat.toFixed(5)}, ${trueLocation.lng.toFixed(5)}</p>`,
                         showCancelButton: true,
-                        confirmButtonText: 'Fazer login',
+                        confirmButtonText: 'Nova Gincana',
                         cancelButtonText: 'Fechar'
                     }).then((result) => {
-                        if (result.dismiss === Swal.DismissReason.cancel) {
-                            location.reload();
+                        if (result.isConfirmed) {
+                            loadNewGincana();
                         }
                     });
                 }
@@ -295,6 +331,16 @@
         if (skipGincanaBtn) {
             skipGincanaBtn.addEventListener("click", () => {
                 loadNewGincana();
+            });
+        }
+
+        // Clique no info da gincana para mostrar novamente
+        const gincanaInfo = document.getElementById("gincanaInfo");
+        if (gincanaInfo) {
+            gincanaInfo.addEventListener("click", () => {
+                if (currentGincana) {
+                    showGincanaInfo(currentGincana);
+                }
             });
         }
 
