@@ -8,7 +8,8 @@
         <!-- Nome da Gincana -->
         <div style="margin-bottom: 16px;">
             <label for="nome" style="display: block; font-weight: bold; margin-bottom: 6px;">Nome da Gincana</label>
-            <input type="text" id="nome" name="nome" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+            <input type="text" id="nome" name="nome" placeholder="Ex.: Onde estudei na infância, onde quero viajar ou encontre meu sonho..." required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+
         </div>
 
         <!-- Duração -->
@@ -33,7 +34,7 @@
         <div style="margin-bottom: 16px;">
             <label for="cidade" style="display: block; font-weight: bold; margin-bottom: 6px;">Cidade / Localização</label>
             <div style="display: flex; gap: 8px;">
-                <input type="text" id="cidade" placeholder="Digite a cidade ou endereço" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <input type="text" id="cidade" placeholder="Digite a cidade ou endereço que vc quer que descubram." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
                 <button type="button" onclick="buscarCidade()" style="padding: 8px 12px; background-color: #0d6efd; color: white; border: none; border-radius: 4px; cursor: pointer;">
                     Buscar
                 </button>
@@ -44,7 +45,7 @@
         <!-- Texto de Contextualização -->
         <div style="margin-bottom: 16px;">
             <label for="contexto" style="display: block; font-weight: bold; margin-bottom: 6px;">Texto de Contextualização (fala do personagem)</label>
-            <textarea id="contexto" name="contexto" rows="3" maxlength="255" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+            <textarea id="contexto" name="contexto" rows="3" maxlength="255" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">Ex.: Olá, meu nome é Maria(o), descubra onde estudei ( viajei, viajarei ou etc...). É nesta lembrança ou sonhos que me escondo sempre que quero me sentir bem... Venha se divertir comigo!! </textarea>
         </div>
 
         <!-- Privacidade -->
