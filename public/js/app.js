@@ -16,7 +16,6 @@ const firebaseConfig = {
         function updateMenuVisibility(user) {
             // Elementos do menu antigo
             const criarGincanaItem = document.getElementById('criarGincanaItem');
-            const dashboardItem = document.getElementById('dashboardItem');
             const logoutItem = document.getElementById('logoutItem');
             const loginItem = document.getElementById('loginItem');
             const userGreeting = document.getElementById('userGreeting');
@@ -28,7 +27,6 @@ const firebaseConfig = {
                 // Usuário logado
                 if (criarGincanaItem) criarGincanaItem.style.display = '';
                 if (minhasGincanasItem) minhasGincanasItem.style.display = '';
-                if (dashboardItem) dashboardItem.style.display = '';
                 if (logoutItem) logoutItem.style.display = '';
                 if (loginItem) loginItem.style.display = 'none';
                 
@@ -38,14 +36,31 @@ const firebaseConfig = {
                     userGreeting.textContent = `Olá, ${firstName}`;
                     userGreeting.style.display = 'inline';
                 }
+                
+                // Atualizar link do logo para dashboard
+                updateLogoLink(true);
             } else {
                 // Usuário não logado
                 if (criarGincanaItem) criarGincanaItem.style.display = 'none';
                 if (minhasGincanasItem) minhasGincanasItem.style.display = 'none';
-                if (dashboardItem) dashboardItem.style.display = 'none';
                 if (logoutItem) logoutItem.style.display = 'none';
                 if (loginItem) loginItem.style.display = '';
                 if (userGreeting) userGreeting.style.display = 'none';
+                
+                // Atualizar link do logo para welcome
+                updateLogoLink(false);
+            }
+        }
+
+        // Função para atualizar o link do logo baseado no status de login
+        function updateLogoLink(isLoggedIn) {
+            const logoLink = document.getElementById('logoLink');
+            if (logoLink) {
+                if (isLoggedIn) {
+                    logoLink.href = '/dashboard';
+                } else {
+                    logoLink.href = '/';
+                }
             }
         }
 
@@ -113,6 +128,15 @@ const firebaseConfig = {
                     e.preventDefault();
                     showHowToPlay();
                 });
+            }
+
+            // Configurar o link do logo inicialmente
+            // Se já há um usuário no localStorage, configura como logado
+            const storedUser = localStorage.getItem('g_user');
+            if (storedUser) {
+                updateLogoLink(true);
+            } else {
+                updateLogoLink(false);
             }
         });
 

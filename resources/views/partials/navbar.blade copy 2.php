@@ -1,6 +1,6 @@
 <header class="navbar-container">
     <nav class="navbar">
-        <a href="#" id="logoLink" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+        <a href="{{ url('/') }}" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
             <span style="font-size: 1.5rem; font-weight: bold; color: #222;">Gincaneiros</span>
         </a>
@@ -11,10 +11,17 @@
             <span></span>
         </button>
         <ul class="navbar-menu" id="navbarMenu">
-            <li><a href="#" id="sobreBtn">Sobre</a></li>
-            <li><a href="#" id="comoJogarBtn">Como Jogar</a></li>
-            
+             <li style="position: relative;" class="dropdown">
+                <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbDN3YWt4M2tyeWp0empvcnk3aHd6NWM4M2lsYzZhYTJ4OTA1bWNoMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/4TnWuHUgkzAj9oayiZ/giphy.gif" alt="Menu" style="height: 36px; width: 36px; cursor: pointer;" class="dropdown-toggle" onclick="toggleDropdown(event)">
+                <ul class="dropdown-menu" id="gincanasDropdown">
+                    <!-- <li><a href="{{ route('gincana.criar') }}">+ Criar Gincana</a></li> -->
+                    <li><a href="#" id="sobreBtn">Sobre</a></li>
+                    <li><a href="#" id="comoJogarBtn">Como Jogar</a></li>
+                </ul>
+            </li>
             <!-- Item antigo mantido para compatibilidade -->
+                         <li id="dashboardItem" style="display:none;"><a href="/dashboard">Home</a></li>
+
             <li id="criarGincanaItem" style="display:none;"><a href="/gincana/criar">Criar Gincana</a></li>
             
             <!-- Submenu "Minhas Gincanas" -->
@@ -28,8 +35,6 @@
                     <li><a href="{{ route('gincana.participadas') }}">Gincanas Participadas</a></li>
                 </ul>
             </li>
-            
-            <!-- Removido o dashboardItem - agora o logo faz essa função -->
             
             <li id="logoutItem" style="display:none;"><a href="#" onclick="logout()">Logout</a></li>
             <li id="loginItem"><a href="#" id="loginBtn">Login com Google</a></li>
@@ -162,18 +167,6 @@
         // Abre o dropdown clicado se não estava ativo
         if (!isActive) {
             dropdown.classList.add('active');
-        }
-    }
-
-    // Função para configurar o link do logo baseado no status de login
-    function updateLogoLink(isLoggedIn) {
-        const logoLink = document.getElementById('logoLink');
-        if (logoLink) {
-            if (isLoggedIn) {
-                logoLink.href = '/dashboard';
-            } else {
-                logoLink.href = '/';
-            }
         }
     }
 
