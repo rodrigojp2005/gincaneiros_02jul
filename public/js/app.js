@@ -11,33 +11,76 @@ const firebaseConfig = {
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
+
+        // Função para atualizar a visibilidade dos elementos do menu
+        function updateMenuVisibility(user) {
+            // Elementos do menu antigo
+            const criarGincanaItem = document.getElementById('criarGincanaItem');
+            const dashboardItem = document.getElementById('dashboardItem');
+            const logoutItem = document.getElementById('logoutItem');
+            const loginItem = document.getElementById('loginItem');
+            const userGreeting = document.getElementById('userGreeting');
+            
+            // Novo elemento do menu "Minhas Gincanas"
+            const minhasGincanasItem = document.getElementById('minhasGincanasItem');
+
+            if (user) {
+                // Usuário logado
+                if (criarGincanaItem) criarGincanaItem.style.display = '';
+                if (minhasGincanasItem) minhasGincanasItem.style.display = '';
+                if (dashboardItem) dashboardItem.style.display = '';
+                if (logoutItem) logoutItem.style.display = '';
+                if (loginItem) loginItem.style.display = 'none';
+                
+                // Exibir saudação só com o primeiro nome
+                if (userGreeting) {
+                    const firstName = user.displayName ? user.displayName.split(' ')[0] : '';
+                    userGreeting.textContent = `Olá, ${firstName}`;
+                    userGreeting.style.display = 'inline';
+                }
+            } else {
+                // Usuário não logado
+                if (criarGincanaItem) criarGincanaItem.style.display = 'none';
+                if (minhasGincanasItem) minhasGincanasItem.style.display = 'none';
+                if (dashboardItem) dashboardItem.style.display = 'none';
+                if (logoutItem) logoutItem.style.display = 'none';
+                if (loginItem) loginItem.style.display = '';
+                if (userGreeting) userGreeting.style.display = 'none';
+            }
+        }
+
         // Verifica se o usuário já está logado
         firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                localStorage.setItem('g_user', JSON.stringify(user));
-                document.getElementById('loginBtn').textContent = 'Logout';
-                document.getElementById('loginBtn').setAttribute('onclick', 'logout()');
-            } else {
-                localStorage.removeItem('g_user');
-                document.getElementById('loginBtn').textContent = 'Login com Google';
-                document.getElementById('loginBtn').removeAttribute('onclick');
+            updateMenuVisibility(user);
+            
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                if (user) {
+                    localStorage.setItem('g_user', JSON.stringify(user));
+                    loginBtn.textContent = 'Logout';
+                    loginBtn.setAttribute('onclick', 'logout()');
+                } else {
+                    localStorage.removeItem('g_user');
+                    loginBtn.textContent = 'Login com Google';
+                    loginBtn.removeAttribute('onclick');
+                }
             }
         });
 
-          // Função global
-    function googleLogin() {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        firebase.auth().signInWithPopup(provider)
-            .then((result) => {
-                const user = result.user;
-                localStorage.setItem('g_user', JSON.stringify(user));
-                window.location.href = "/dashboard";
-            })
-            .catch((error) => {
-                console.error(error);
-                Swal.fire('Erro ao logar', error.message, 'error');
-            });
-    }
+        // Função global
+        function googleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    localStorage.setItem('g_user', JSON.stringify(user));
+                    window.location.href = "/dashboard";
+                })
+                .catch((error) => {
+                    console.error(error);
+                    Swal.fire('Erro ao logar', error.message, 'error');
+                });
+        }
 
         function logout() {
             firebase.auth().signOut().then(() => {
@@ -49,78 +92,60 @@ const firebaseConfig = {
             });
         }   
 
-        const loginBtn = document.getElementById('loginBtn');
-        if (loginBtn) {
-            loginBtn.addEventListener('click', googleLogin);
+        // Aguarda o DOM estar pronto antes de adicionar event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                loginBtn.addEventListener('click', googleLogin);
+            }
+
+            const sobreBtn = document.getElementById('sobreBtn');
+            if (sobreBtn) {
+                sobreBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showAbout();
+                });
+            }
+
+            const comoJogarBtn = document.getElementById('comoJogarBtn');
+            if (comoJogarBtn) {
+                comoJogarBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showHowToPlay();
+                });
+            }
+        });
+
+        function showAbout() {
+            Swal.fire({
+                title: 'Sobre o Gincaneiros',
+                html: `
+               <p><strong>Gincaneiros</strong> é um jogo interativo e turístico de localização.</p>
+                             <p>O objetivo é simples: um jogador escolhe um local no Street View e desafia os amigos (ou o mundo!) a descobrirem onde ele está.</p>
+                             <p>💡 É como uma gincana moderna, baseada em mapas e intuição geográfica!</p>
+                             <p style="margin-top:15px;">📬 Dúvidas ou sugestões? <br><a href="mailto:contato@gincaneiros.com">contato@gincaneiros.com</a></p>               
+                `,
+                icon: 'info',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#0d6efd'
+            });
         }
 
-        // ...depois de verificar o usuário logado no Firebase...
-firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-        document.getElementById('criarGincanaItem').style.display = '';
-        document.getElementById('dashboardItem').style.display = '';
-        document.getElementById('logoutItem').style.display = '';
-        document.getElementById('loginItem').style.display = 'none';
-        // Exibir saudação só com o primeiro nome
-        const firstName = user.displayName ? user.displayName.split(' ')[0] : '';
-        document.getElementById('userGreeting').textContent = `Olá, ${firstName}`;
-        document.getElementById('userGreeting').style.display = 'inline';
-    } else {
-        document.getElementById('criarGincanaItem').style.display = 'none';
-        document.getElementById('dashboardItem').style.display = 'none';
-        document.getElementById('logoutItem').style.display = 'none';
-        document.getElementById('loginItem').style.display = '';
-        document.getElementById('userGreeting').style.display = 'none';
-    }
-});
+        function showHowToPlay() {
+            Swal.fire({
+                title: 'Como Jogar',
+                html: `
+                     <p><strong>Gincaneiros</strong> é um jogo de localização divertido e direto.</p>
+                             <ul style="text-align: center;">
+                                 <li>👤 Um jogador escolhe um local real no Street View.</li>
+                                 <li>📍 Um desafio é gerado para os amigos encontrarem o local.</li>
+                                 <li>🗺️ Quem chegar mais perto, ganha mais pontos.</li>
+                                <li>🏆 O jogador com mais pontos no final vence.</li>
+                            </ul>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Entendi!',
+                confirmButtonColor: '#0d6efd'
+            });
+        }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const sobreBtn = document.getElementById('sobreBtn');
-    if (sobreBtn) {
-        sobreBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showAbout();
-        });
-    }
-
-    const comoJogarBtn = document.getElementById('comoJogarBtn');
-    if (comoJogarBtn) {
-        comoJogarBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showHowToPlay();
-        });
-    }
-});
-
-function showAbout() {
-    Swal.fire({
-        title: 'Sobre o Gincaneiros',
-        html: `
-       <p><strong>Gincaneiros</strong> é um jogo interativo e turístico de localização.</p>
-                     <p>O objetivo é simples: um jogador escolhe um local no Street View e desafia os amigos (ou o mundo!) a descobrirem onde ele está.</p>
-                     <p>💡 É como uma gincana moderna, baseada em mapas e intuição geográfica!</p>
-                     <p style="margin-top:15px;">📬 Dúvidas ou sugestões? <br><a href="mailto:contato@gincaneiros.com">contato@gincaneiros.com</a></p>               
-        `,
-        icon: 'info',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#0d6efd'
-    });
-}
-
-function showHowToPlay() {
-    Swal.fire({
-        title: 'Como Jogar',
-        html: `
-             <p><strong>Gincaneiros</strong> é um jogo de localização divertido e direto.</p>
-                     <ul style="text-align: center;">
-                         <li>👤 Um jogador escolhe um local real no Street View.</li>
-                         <li>📍 Um desafio é gerado para os amigos encontrarem o local.</li>
-                         <li>🗺️ Quem chegar mais perto, ganha mais pontos.</li>
-                        <li>🏆 O jogador com mais pontos no final vence.</li>
-                    </ul>
-        `,
-        icon: 'info',
-        confirmButtonText: 'Entendi!',
-        confirmButtonColor: '#0d6efd'
-    });
-}

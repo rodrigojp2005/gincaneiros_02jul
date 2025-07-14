@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//add the Gincana model
 use App\Models\Gincana;
-
 
 class GincanaController extends Controller
 {
@@ -26,28 +24,89 @@ class GincanaController extends Controller
             'privacidade' => 'required|in:publica,privada',
         ]);
 
-        // Salvar no banco (você precisa criar o model Gincana)
-        $gincana = \App\Models\Gincana::create($validated);
+        // Salvar no banco
+        $gincana = Gincana::create($validated);
 
-        // Redirecionar ou mostrar mensagem de sucesso
-        return redirect()->route('gincana.criar')->with('success', 'Gincana criada com sucesso!');
+        // Redirecionar para a lista de gincanas criadas
+        return redirect()->route('gincana.minhas')->with('success', 'Gincana criada com sucesso!');
     }
 
     public function index()
     {
-        $gincanas = \App\Models\Gincana::all();
+        $gincanas = Gincana::all();
         return view('gincana.index', compact('gincanas'));
     }
 
     /**
-     * Retorna uma nova gincana (coordenadas aleatórias)
-     * Esta função é chamada tanto para carregar a gincana inicial
-     * quanto para pular para uma nova gincana
+     * Lista as gincanas criadas pelo usuário (simulado por enquanto)
+     */
+    public function minhasGincanas()
+    {
+        // Por enquanto, mostra todas as gincanas
+        // Em uma implementação real, filtraria por user_id
+        $gincanas = Gincana::orderBy('created_at', 'desc')->get();
+        return view('gincana.minhas', compact('gincanas'));
+    }
+
+    /**
+     * Mostra o formulário de edição de uma gincana
+     */
+    public function edit($id)
+    {
+        $gincana = Gincana::findOrFail($id);
+        return view('gincana.editar', compact('gincana'));
+    }
+
+    /**
+     * Atualiza uma gincana existente
+     */
+    public function update(Request $request, $id)
+    {
+        $gincana = Gincana::findOrFail($id);
+
+        // Validação dos dados
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'duracao' => 'required|integer',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'contexto' => 'required|string|max:255',
+            'privacidade' => 'required|in:publica,privada',
+        ]);
+
+        // Atualizar no banco
+        $gincana->update($validated);
+
+        return redirect()->route('gincana.minhas')->with('success', 'Gincana atualizada com sucesso!');
+    }
+
+    /**
+     * Remove uma gincana
+     */
+    public function destroy($id)
+    {
+        $gincana = Gincana::findOrFail($id);
+        $gincana->delete();
+
+        return redirect()->route('gincana.minhas')->with('success', 'Gincana excluída com sucesso!');
+    }
+
+    /**
+     * Lista as gincanas que o usuário participou (placeholder)
+     */
+    public function gincanasParticipadas()
+    {
+        // Placeholder - em uma implementação real, haveria uma tabela de participações
+        $gincanas = collect(); // Lista vazia por enquanto
+        return view('gincana.participadas', compact('gincanas'));
+    }
+
+    /**
+     * Retorna uma nova gincana aleatória do banco de dados
      */
     public function newGincana()
     {
-
-         try {
+        try {
             // Busca apenas gincanas públicas do banco de dados
             $gincana = Gincana::where('privacidade', 'publica')
                               ->inRandomOrder()
@@ -84,14 +143,8 @@ class GincanaController extends Controller
         }
     }
 
-    //     $newLocation = $randomLocations[array_rand($randomLocations)];
-
-    //     return response()->json($newLocation);
-    // }
-
     /**
-     * Método mantido para compatibilidade com a implementação anterior
-     * Agora redireciona para newGincana()
+     * Método mantido para compatibilidade
      */
     public function skipGincana()
     {
@@ -143,6 +196,4 @@ class GincanaController extends Controller
         }
     }
 }
-
-
 
